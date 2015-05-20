@@ -65,7 +65,6 @@ import uk.org.blankaspect.gui.FLabel;
 import uk.org.blankaspect.gui.FMenuItem;
 import uk.org.blankaspect.gui.GuiUtilities;
 import uk.org.blankaspect.gui.NonEditableTextPaneDialog;
-import uk.org.blankaspect.gui.PathnameComboBox;
 import uk.org.blankaspect.gui.PathnamePanel;
 
 import uk.org.blankaspect.iff.ChunkFilter;
@@ -345,40 +344,6 @@ class MainWindow
 
     //==================================================================
 
-
-    // WINDOW EVENT HANDLER CLASS
-
-
-    private static class WindowEventHandler
-        extends WindowAdapter
-    {
-
-    ////////////////////////////////////////////////////////////////////
-    //  Constructors
-    ////////////////////////////////////////////////////////////////////
-
-        private WindowEventHandler( )
-        {
-        }
-
-        //--------------------------------------------------------------
-
-    ////////////////////////////////////////////////////////////////////
-    //  Instance methods : overriding methods
-    ////////////////////////////////////////////////////////////////////
-
-        @Override
-        public void windowClosing( WindowEvent event )
-        {
-            AppCommand.EXIT.execute( );
-        }
-
-        //--------------------------------------------------------------
-
-    }
-
-    //==================================================================
-
 ////////////////////////////////////////////////////////////////////////
 //  Member classes : inner classes
 ////////////////////////////////////////////////////////////////////////
@@ -607,6 +572,7 @@ class MainWindow
 
         // Panel: input pathname
         inPathnameComboBox = new FPathnameComboBox( );
+        FPathnameComboBox.addObserver( inPathnameComboBox );
         PathnamePanel inPathnamePanel = new PathnamePanel( inPathnameComboBox,
                                                            Command.CHOOSE_INPUT_PATHNAME, this );
         inPathnamePanel.setButtonTooltipText( SELECT_INPUT_PATHNAME_TOOLTIP_STR );
@@ -659,6 +625,7 @@ class MainWindow
 
         // Panel: output directory
         outDirectoryComboBox = new FPathnameComboBox( );
+        FPathnameComboBox.addObserver( outDirectoryComboBox );
         PathnamePanel outDirectoryPanel = new PathnamePanel( outDirectoryComboBox,
                                                              Command.CHOOSE_OUTPUT_DIRECTORY, this );
         outDirectoryPanel.setButtonTooltipText( SELECT_OUTPUT_DIRECTORY_TOOLTIP_STR );
@@ -774,8 +741,15 @@ class MainWindow
         // Dispose of window explicitly
         setDefaultCloseOperation( DO_NOTHING_ON_CLOSE );
 
-        // Handle window events
-        addWindowListener( new WindowEventHandler( ) );
+        // Handle window closing
+        addWindowListener( new WindowAdapter( )
+        {
+            @Override
+            public void windowClosing( WindowEvent event )
+            {
+                AppCommand.EXIT.execute( );
+            }
+        } );
 
         // Prevent window from being resized
         setResizable( false );
@@ -1350,8 +1324,8 @@ class MainWindow
 
     private FComboBox<InputMode>    inputModeComboBox;
     private JCheckBox               recursiveCheckBox;
-    private PathnameComboBox        inPathnameComboBox;
-    private PathnameComboBox        outDirectoryComboBox;
+    private FPathnameComboBox       inPathnameComboBox;
+    private FPathnameComboBox       outDirectoryComboBox;
     private JFileChooser            inPathnameChooser;
     private JFileChooser            outDirectoryChooser;
     private JFileChooser            compressFileChooser;

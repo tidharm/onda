@@ -36,26 +36,18 @@ class FPathnameComboBox
     public FPathnameComboBox( )
     {
         super( MAX_NUM_PATHNAMES, NUM_COLUMNS );
+        setUnixStyle( AppConfig.getInstance( ).isShowUnixPathnames( ) );
     }
 
     //------------------------------------------------------------------
 
 ////////////////////////////////////////////////////////////////////////
-//  Instance methods : overriding methods
+//  Class methods
 ////////////////////////////////////////////////////////////////////////
 
-    @Override
-    protected char getFileSeparatorChar( )
+    public static void addObserver( FPathnameComboBox comboBox )
     {
-        return Util.getFileSeparatorChar( );
-    }
-
-    //------------------------------------------------------------------
-
-    @Override
-    protected boolean isUnixStylePathnames( )
-    {
-        return AppConfig.getInstance( ).isShowUnixPathnames( );
+        AppConfig.getInstance( ).addShowUnixPathnamesObserver( comboBox.getField( ) );
     }
 
     //------------------------------------------------------------------
